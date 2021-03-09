@@ -16,15 +16,7 @@ g++ -O3 -g3 -fPIC -Wall -c -o obj\L1.o SEcubeSources\L1\L1.cpp
 g++ -O0 -g3 -fPIC -Wall -c -o obj\L0_wrapper.o L0_wrapper.cpp
 g++ -O0 -g3 -fPIC -Wall -c -o obj\L1_wrapper.o L1_wrapper.cpp
 
-g++ -shared -fPIC -o lib/L0.dll ^
-    obj\L0.o ^
-    obj\L0_commodities.o ^
-    obj\L0_communication.o ^
-    obj\L0_provision.o ^
-    obj\L0_base.o ^
-    obj\L0_wrapper.o
-
-g++ -shared -fPIC -o lib/L1.dll ^
+g++ -shared -fPIC -o lib/SEcubeWrapper.dll ^
     obj\L0.o ^
     obj\L0_commodities.o ^
     obj\L0_communication.o ^
@@ -37,4 +29,5 @@ g++ -shared -fPIC -o lib/L1.dll ^
     obj\L1_login_logout.o ^
     obj\L1_security.o ^
     obj\L1.o ^
+    obj\L0_wrapper.o ^
     obj\L1_wrapper.o

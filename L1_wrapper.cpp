@@ -103,6 +103,42 @@ int8_t L1_Decrypt(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
 	return 0;
 }
 
+/**
+ * 
+ * The L1Digest function provided by the SEcube L1 host library seems broken
+ * with an infinite loop and since the session is closed after the first
+ * iteration, the second iteration throws an exception as it attempts to use
+ * the closed session.
+ * 
+ * This function has two problems being:
+ *   1) The L1CryptoInit function has to be supplied with a key id. This is
+ * 		because if you attempt to execute the L1CryptoInit function with a "0"
+ * 		(zero) as the keyId, an exception is thrown (I assume this is a bug).
+ *   2) This function will not handle very large data
+ * 		(> L1Crypto::UpdateSize::DATAIN), like L1Encrypt and
+ * 		L1Decrypt, as it does not have the looping mechanism.
+ * 
+ */
+int8_t L1_Digest(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
+                    size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm)
+{
+	L1 *obj = (L1 *)l1->obj;
+	try
+	{
+		uint32_t sessionId;
+
+		obj->L1CryptoInit(algorithm, 0, 10, &sessionId);
+		obj->L1CryptoUpdate(sessionId, L1Crypto::UpdateFlags::FINIT,
+			dataInLen, dataIn, 0, NULL, (uint16_t *)dataOutLen, dataOut);
+	}
+	catch(...)
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
 int8_t L1_CryptoInit(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
 					 uint32_t keyID, uint32_t* sessionID)
 {

@@ -28,6 +28,8 @@ extern "C"
     int8_t L1_Decrypt(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
                       size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm,
                       uint16_t mode, uint32_t keyID);
+    int8_t L1_Digest(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
+                    size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm);
 }
 
 #endif // !_L1_WRAPPER_H

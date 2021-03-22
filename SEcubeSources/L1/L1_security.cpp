@@ -224,22 +224,18 @@ void L1::L1Decrypt(size_t dataInLen, uint8_t* dataIn, size_t* dataOutLen, uint8_
 void L1::L1Digest(size_t dataInLen, uint8_t* dataIn, size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm) {
 	L1DigestException digestExc;
 
-	printf("1\n");
 	if(dataInLen < 0 || dataOut == NULL)
 		throw digestExc;
 
 	uint32_t encSessId = 0;
 
 	try {
-		printf("2\n");
 		L1CryptoInit(algorithm, 0, 0, &encSessId);
 	}
 	catch (L1Exception& e) {
-		printf("2.5\n");
 		throw digestExc;
 	}
 
-	printf("3\n");
 	if(dataOutLen != NULL)
 		*dataOutLen = 0;
 
@@ -250,7 +246,6 @@ void L1::L1Digest(size_t dataInLen, uint8_t* dataIn, size_t* dataOutLen, uint8_t
 
 	do{
 		try {
-			printf("4\n");
 			if(dataInLen - currChunk)
 				L1CryptoUpdate(	encSessId,
 								0,

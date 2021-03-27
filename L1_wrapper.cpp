@@ -55,6 +55,20 @@ int8_t L1_Logout(L1_handle_t *l1)
 	return 0;
 }
 
+int8_t L1_KeyEdit(L1_handle_t *l1, se3Key* key, uint16_t op)
+{
+	L1 *obj = (L1 *)l1->obj;
+	try
+	{
+		obj->L1KeyEdit(key, op);
+	}
+	catch (...)
+	{
+		return -1;
+	}
+	return 0;
+}
+
 int8_t L1_CryptoSetTimeNow(L1_handle_t *l1)
 {
 	L1 *obj = (L1 *)l1->obj;

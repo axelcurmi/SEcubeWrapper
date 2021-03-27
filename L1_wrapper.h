@@ -15,6 +15,8 @@ extern "C"
                     bool force);
     int8_t L1_Logout(L1_handle_t *l1);
 
+    int8_t L1_KeyEdit(L1_handle_t *l1, se3Key* key, uint16_t op);
+
     int8_t L1_CryptoSetTimeNow(L1_handle_t *l1);
     int8_t L1_CryptoInit(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
                          uint32_t keyID, uint32_t* sessionID);

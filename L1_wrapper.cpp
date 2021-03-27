@@ -55,6 +55,12 @@ int8_t L1_Logout(L1_handle_t *l1)
 	return 0;
 }
 
+int8_t L1_FindKey(L1_handle_t *l1, uint32_t keyID)
+{
+	L1 *obj = (L1 *)l1->obj;
+	return obj->L1FindKey(keyID);
+}
+
 int8_t L1_KeyEdit(L1_handle_t *l1, se3Key* key, uint16_t op)
 {
 	L1 *obj = (L1 *)l1->obj;
@@ -127,7 +133,8 @@ int8_t L1_Decrypt(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
  * This function has two problems being:
  *   1) The L1CryptoInit function has to be supplied with a key id. This is
  * 		because if you attempt to execute the L1CryptoInit function with a "0"
- * 		(zero) as the keyId, an exception is thrown (I assume this is a bug).
+ * 		(zero) as the keyId and no key with Id "0" exists, an exception is
+ 		thrown (I assume this is a bug).
  *   2) This function will not handle very large data
  * 		(> L1Crypto::UpdateSize::DATAIN), like L1Encrypt and
  * 		L1Decrypt, as it does not have the looping mechanism.
@@ -141,7 +148,7 @@ int8_t L1_Digest(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
 	{
 		uint32_t sessionId;
 
-		obj->L1CryptoInit(algorithm, 0, 10, &sessionId);
+		obj->L1CryptoInit(algorithm, 0, 0, &sessionId);
 		obj->L1CryptoUpdate(sessionId, L1Crypto::UpdateFlags::FINIT,
 			dataInLen, dataIn, 0, NULL, (uint16_t *)dataOutLen, dataOut);
 	}

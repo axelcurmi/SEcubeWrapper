@@ -14,7 +14,7 @@ extern "C"
     void L1_Destroy(L1_handle_t *l1);
 
     int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
-                    bool force);
+        bool force);
     int8_t L1_Logout(L1_handle_t *l1);
 
     int8_t L1_FindKey(L1_handle_t *l1, uint32_t keyID);
@@ -22,21 +22,12 @@ extern "C"
 
     int8_t L1_CryptoSetTimeNow(L1_handle_t *l1);
 
-    int8_t SHA256_digest(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
-                         uint16_t *dataOutLen, uint8_t *dataOut);
-    int8_t Encrypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
-                   uint32_t keyID, uint16_t dataInLen, uint8_t *dataIn,
-                   uint16_t IVLen, uint8_t *IV, uint16_t *dataOutLen,
-                   uint8_t *dataOut);
-
-    // int8_t L1_Encrypt(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
-    //                   size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm,
-    //                   uint16_t mode, uint32_t keyID);
-    // int8_t L1_Decrypt(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
-    //                   size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm,
-    //                   uint16_t mode, uint32_t keyID);
-    // int8_t L1_Digest(L1_handle_t *l1, size_t dataInLen, uint8_t* dataIn,
-    //                 size_t* dataOutLen, uint8_t* dataOut, uint16_t algorithm);
+    int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
+        uint16_t *dataOutLen, uint8_t *dataOut);
+    int8_t Crypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
+        uint32_t keyID, uint16_t dataInLen, uint8_t *dataIn,
+        uint16_t IVLen, uint8_t *IV, uint16_t *dataOutLen,
+        uint8_t *dataOut);
 }
 
 #endif // !_L1_WRAPPER_H

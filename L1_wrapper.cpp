@@ -98,7 +98,7 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         // Create session
         uint32_t sessionID;
         obj->L1CryptoInit(L1Algorithms::Algorithms::SHA256, 0, SHA256_KEY_ID,
-                          &sessionID);
+            &sessionID);
 
         // SHA256 Update
         uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
@@ -106,7 +106,7 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         while (dataInLen > 0)
         {
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
-                                NULL, NULL);
+                NULL, NULL);
             
             dataIn += chunkLen;
             dataInLen -= chunkLen;
@@ -114,7 +114,7 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
 
         // FINIT
         obj->L1CryptoUpdate(sessionID, L1Crypto::UpdateFlags::FINIT, 0, NULL,
-                            0, NULL, dataOutLen, dataOut);
+            0, NULL, dataOutLen, dataOut);
     }
     catch(...)
     {
@@ -143,7 +143,7 @@ int8_t Crypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
         if (IVLen > 0 && IV != NULL)
         {
             obj->L1CryptoUpdate(sessionID, L1Crypto::UpdateFlags::SET_IV,
-                                IVLen, IV, 0, NULL, NULL, NULL);
+                IVLen, IV, 0, NULL, NULL, NULL);
         }
 
         // Crypto Update
@@ -154,7 +154,7 @@ int8_t Crypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
         while (dataInLen > 0)
         {
             obj->L1CryptoUpdate(sessionID, mode, 0, NULL, chunkInLen, dataIn,
-                                &chunkOutLen, dataOut);
+                &chunkOutLen, dataOut);
 
             dataIn += chunkInLen;
             dataInLen -= chunkInLen;
@@ -165,7 +165,7 @@ int8_t Crypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
 
         // FINIT
         obj->L1CryptoUpdate(sessionID, L1Crypto::UpdateFlags::FINIT, 0, NULL,
-                            0, NULL, NULL, NULL);
+            0, NULL, NULL, NULL);
     }
     catch (...)
     {

@@ -22,12 +22,14 @@ extern "C"
 
     int8_t L1_CryptoSetTimeNow(L1_handle_t *l1);
 
+    int8_t CryptoInit(L1_handle_t *l1, uint16_t algorithm, uint16_t flags,
+        uint32_t keyId, uint32_t* sessionId);
+    int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
+        uint16_t data1Len, uint8_t* data1, uint16_t data2Len, uint8_t* data2,
+        uint16_t* dataOutLen, uint8_t* dataOut);
+
     int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         uint16_t *dataOutLen, uint8_t *dataOut);
-    int8_t Crypt(L1_handle_t *l1, uint16_t algorithm, uint16_t mode,
-        uint32_t keyID, uint16_t dataInLen, uint8_t *dataIn,
-        uint16_t IVLen, uint8_t *IV, uint16_t *dataOutLen,
-        uint8_t *dataOut);
 }
 
 #endif // !_L1_WRAPPER_H

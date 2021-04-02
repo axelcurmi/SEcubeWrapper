@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "SEcubeSources/L1/L1.h"
+#include "../SEcubeSources/L1/L1.h"
 
 static uint8_t pin_test[32] = {
     't','e','s','t', 0,0,0,0, 0,0,0,0, 0,0,0,0,

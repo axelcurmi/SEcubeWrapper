@@ -30,6 +30,9 @@ extern "C"
 
     int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         uint16_t *dataOutLen, uint8_t *dataOut);
+    int8_t DigestHMACSHA256(L1_handle_t *l1, uint32_t keyId,
+        uint16_t dataInLen, uint8_t *dataIn, uint16_t *dataOutLen,
+        uint8_t *dataOut);
 }
 
 #endif // !_L1_WRAPPER_H

@@ -5,7 +5,7 @@ struct L0_handler {
 	void *obj;
 };
 
-L0_handler_t *L0_create()
+L0_handler_t *L0_Create()
 {
 	L0_handler_t *l0;
 	L0 *obj;
@@ -17,13 +17,13 @@ L0_handler_t *L0_create()
     return l0;
 }
 
-void L0_destroy(L0_handler_t *l0)
+void L0_Destroy(L0_handler_t *l0)
 {
 	delete (L0 *) l0->obj;
 	free(l0);
 }
 
-uint8_t L0_getNumberDevices(L0_handler_t *l0)
+uint8_t L0_GetNumberDevices(L0_handler_t *l0)
 {
     return ((L0 *)l0->obj)->GetNumberDevices();
 }

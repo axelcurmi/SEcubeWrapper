@@ -36,7 +36,8 @@ int main()
     printf("Key List:\n");
     for (uint16_t i = 0; i < count; i++)
     {
-        printf("  [%d] %s\n", i, keyArray[i].name);
+        printf("  [%d] %s (%d)\n", keyArray[i].id, keyArray[i].name,
+            keyArray[i].validity);
     }
 
     // Algorithms

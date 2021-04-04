@@ -3,14 +3,21 @@
 
 #include <stdint.h>
 
-extern "C" {
-    struct L0_handler;
-    typedef struct L0_handler L0_handler_t;
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-    L0_handler_t *L0_Create();
-    void L0_Destroy(L0_handler_t *l0);
+struct L0_handler;
+typedef struct L0_handler L0_handler_t;
 
-    uint8_t L0_GetNumberDevices(L0_handler_t *l0);
+L0_handler_t *L0_Create();
+void L0_Destroy(L0_handler_t *l0);
+
+uint8_t L0_GetNumberDevices(L0_handler_t *l0);
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif // !_L0_WRAPPER_H

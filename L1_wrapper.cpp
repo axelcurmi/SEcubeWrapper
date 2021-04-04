@@ -27,7 +27,7 @@ void L1_Destroy(L1_handle_t *l1)
 }
 
 int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
-    bool force)
+    uint8_t force)
 {
     L1 *obj = (L1 *)l1->obj;
     try
@@ -61,12 +61,28 @@ int8_t L1_FindKey(L1_handle_t *l1, uint32_t keyID)
     return obj->L1FindKey(keyID);
 }
 
-int8_t L1_KeyEdit(L1_handle_t *l1, se3Key* key, uint16_t op)
+int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
+    uint16_t dataSize, uint16_t nameSize, uint8_t* data, uint8_t* name,
+    uint16_t op)
 {
     L1 *obj = (L1 *)l1->obj;
+
+    se3Key key;
+    key.id = id;
+    key.validity = validity;
+    key.dataSize = dataSize;
+    key.nameSize = nameSize;
+    key.data = data;
+    
+    if (nameSize > 0)
+    {
+        memcpy(key.name, name, nameSize > L1Key::Size::MAX_NAME ?
+            L1Key::Size::MAX_NAME : nameSize);
+    }
+
     try
     {
-        obj->L1KeyEdit(key, op);
+        obj->L1KeyEdit(&key, op);
     }
     catch (...)
     {

@@ -10,6 +10,10 @@ struct L1_handle
 
 L1_handle_t *L1_Create()
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_Create\n");
+#endif // DEBUG_LOG
+
     L1_handle_t *l1;
     L1 *obj;
 
@@ -22,6 +26,10 @@ L1_handle_t *L1_Create()
 
 void L1_Destroy(L1_handle_t *l1)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_Destroy\n");
+#endif // DEBUG_LOG
+
     delete (L1 *)l1->obj;
     free(l1);
 }
@@ -29,6 +37,10 @@ void L1_Destroy(L1_handle_t *l1)
 int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
     uint8_t force)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_Login\n");
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -43,6 +55,10 @@ int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
 
 int8_t L1_Logout(L1_handle_t *l1)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_Logout\n");
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -57,6 +73,10 @@ int8_t L1_Logout(L1_handle_t *l1)
 
 int8_t L1_FindKey(L1_handle_t *l1, uint32_t keyID)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_FindKey\n");
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     return obj->L1FindKey(keyID);
 }
@@ -65,6 +85,16 @@ int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
     uint16_t dataSize, uint16_t nameSize, uint8_t* data, uint8_t* name,
     uint16_t op)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_KeyEdit\n");
+    printf("  -> id: %d\n", id);
+    printf("  -> validity: %d\n", validity);
+    printf("  -> dataSize: %d\n", dataSize);
+    printf("  -> nameSize: %d\n", nameSize);
+    printf("  -> name: %s\n", name);
+    printf("  -> op: %s\n", op);
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
 
     se3Key key;
@@ -93,6 +123,10 @@ int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
 
 int8_t L1_CryptoSetTimeNow(L1_handle_t *l1)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L1_CryptoSetTimeNow\n");
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -108,6 +142,14 @@ int8_t L1_CryptoSetTimeNow(L1_handle_t *l1)
 int8_t CryptoInit(L1_handle_t *l1, uint16_t algorithm, uint16_t flags,
     uint32_t keyId, uint32_t* sessionId)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] CryptoInit\n");
+    printf("  -> algorithm: %d\n", algorithm);
+    printf("  -> flags: %d\n", flags);
+    printf("  -> keyId: %d\n", keyId);
+    printf("  -> sessionId: %d\n", sessionId);
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -124,6 +166,14 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
     uint16_t data1Len, uint8_t* data1, uint16_t data2Len, uint8_t* data2,
     uint16_t* dataOutLen, uint8_t* dataOut)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] CryptoUpdate\n");
+    printf("  -> sessionId: %d\n", sessionId);
+    printf("  -> flags: %d\n", flags);
+    printf("  -> data1Len: %d\n", data1Len);
+    printf("  -> data2Len: %d\n", data2Len);
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -140,6 +190,11 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
 int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
     uint16_t *dataOutLen, uint8_t *dataOut)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] DigestSHA256\n");
+    printf("  -> dataInLen: %d\n", dataInLen);
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {
@@ -175,6 +230,12 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
 int8_t DigestHMACSHA256(L1_handle_t *l1, uint32_t keyId, uint16_t dataInLen,
     uint8_t *dataIn, uint16_t *dataOutLen, uint8_t *dataOut)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] DigestHMACSHA256\n");
+    printf("  -> keyId: %d\n", keyId);
+    printf("  -> dataInLen: %d\n", dataInLen);
+#endif // DEBUG_LOG
+
     L1 *obj = (L1 *)l1->obj;
     try
     {

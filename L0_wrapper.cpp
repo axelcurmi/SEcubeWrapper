@@ -7,6 +7,10 @@ struct L0_handler {
 
 L0_handler_t *L0_Create()
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L0_Create\n");
+#endif // DEBUG_LOG
+
 	L0_handler_t *l0;
 	L0 *obj;
 
@@ -19,11 +23,19 @@ L0_handler_t *L0_Create()
 
 void L0_Destroy(L0_handler_t *l0)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L0_Destroy\n");
+#endif // DEBUG_LOG
+
 	delete (L0 *) l0->obj;
 	free(l0);
 }
 
 uint8_t L0_GetNumberDevices(L0_handler_t *l0)
 {
+#ifdef DEBUG_LOG
+    printf("[DEBUG_LOG] L0_GetNumberDevices\n");
+#endif // DEBUG_LOG
+
     return ((L0 *)l0->obj)->GetNumberDevices();
 }

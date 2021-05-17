@@ -87,12 +87,6 @@ int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
 {
 #ifdef DEBUG_LOG
     printf("[DEBUG_LOG] L1_KeyEdit\n");
-    printf("  -> id: %d\n", id);
-    printf("  -> validity: %d\n", validity);
-    printf("  -> dataSize: %d\n", dataSize);
-    printf("  -> nameSize: %d\n", nameSize);
-    printf("  -> name: %s\n", name);
-    printf("  -> op: %s\n", op);
 #endif // DEBUG_LOG
 
     L1 *obj = (L1 *)l1->obj;
@@ -208,6 +202,9 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
             dataInLen : L1Crypto::UpdateSize::DATAIN;
         while (dataInLen > 0)
         {
+            #ifdef DEBUG_LOG
+                printf("  -> chunkLen: %d\n", chunkLen);
+            #endif // DEBUG_LOG
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
                 NULL, NULL);
             
@@ -249,6 +246,9 @@ int8_t DigestHMACSHA256(L1_handle_t *l1, uint32_t keyId, uint16_t dataInLen,
             dataInLen : L1Crypto::UpdateSize::DATAIN;
         while (dataInLen > 0)
         {
+            #ifdef DEBUG_LOG
+                printf("  -> chunkLen: %d\n", chunkLen);
+            #endif // DEBUG_LOG
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
                 NULL, NULL);
             

@@ -171,8 +171,37 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
     L1 *obj = (L1 *)l1->obj;
     try
     {
-        obj->L1CryptoUpdate(sessionId, flags, data1Len, data1, data2Len, data2,
-            dataOutLen, dataOut);
+        if (dataOutLen != NULL)
+        {
+            *dataOutLen = 0;
+        }
+
+        if (data2Len == 0)
+        {
+            obj->L1CryptoUpdate(sessionId, flags, data1Len, data1, 0, NULL,
+                dataOutLen, dataOut);
+        }
+        else
+        {
+            while (data2Len > 0)
+            {
+                uint16_t chunkLen = data2Len < L1Crypto::UpdateSize::DATAIN ? 
+                    data2Len : L1Crypto::UpdateSize::DATAIN;
+                uint16_t chunkOutLen = 0;
+
+#ifdef DEBUG_LOG
+                printf("  -> chunkLen: %d\n", chunkLen);
+#endif // DEBUG_LOG
+
+                obj->L1CryptoUpdate(sessionId, flags, data1Len, data1, chunkLen,
+                    data2, &chunkOutLen, dataOut);
+
+                data2 += chunkLen;
+                dataOut += chunkLen;
+                data2Len -= chunkLen;
+                *dataOutLen += chunkOutLen;
+            }
+        }
     }
     catch(...)
     {
@@ -198,13 +227,13 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
             &sessionID);
 
         // SHA256 Update
-        uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
-            dataInLen : L1Crypto::UpdateSize::DATAIN;
         while (dataInLen > 0)
         {
-            #ifdef DEBUG_LOG
-                printf("  -> chunkLen: %d\n", chunkLen);
-            #endif // DEBUG_LOG
+            uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
+                dataInLen : L1Crypto::UpdateSize::DATAIN;
+#ifdef DEBUG_LOG
+            printf("  -> chunkLen: %d\n", chunkLen);
+#endif // DEBUG_LOG
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
                 NULL, NULL);
             
@@ -242,13 +271,14 @@ int8_t DigestHMACSHA256(L1_handle_t *l1, uint32_t keyId, uint16_t dataInLen,
             keyId, &sessionID);
 
         // SHA256 Update
-        uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
-            dataInLen : L1Crypto::UpdateSize::DATAIN;
         while (dataInLen > 0)
         {
-            #ifdef DEBUG_LOG
-                printf("  -> chunkLen: %d\n", chunkLen);
-            #endif // DEBUG_LOG
+            uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
+                dataInLen : L1Crypto::UpdateSize::DATAIN;
+#ifdef DEBUG_LOG
+            printf("  -> chunkLen: %d\n", chunkLen);
+#endif // DEBUG_LOG
+
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
                 NULL, NULL);
             

@@ -141,7 +141,7 @@ int8_t CryptoInit(L1_handle_t *l1, uint16_t algorithm, uint16_t flags,
     printf("  -> algorithm: %d\n", algorithm);
     printf("  -> flags: %d\n", flags);
     printf("  -> keyId: %d\n", keyId);
-    printf("  -> sessionId: %d\n", sessionId);
+    printf("  -> sessionId: %d\n", *sessionId);
 #endif // DEBUG_LOG
 
     L1 *obj = (L1 *)l1->obj;
@@ -176,10 +176,37 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
             *dataOutLen = 0;
         }
 
-        if (data2Len == 0)
+        if (data1Len == 0 and data2Len == 0)
         {
-            obj->L1CryptoUpdate(sessionId, flags, data1Len, data1, 0, NULL,
-                dataOutLen, dataOut);
+            obj->L1CryptoUpdate(sessionId, flags, 0, NULL, 0, NULL,
+                    dataOutLen, dataOut);
+        }
+        else if (data2Len == 0)
+        {
+            while (data1Len > 0)
+            {
+                uint16_t chunkLen = data1Len < L1Crypto::UpdateSize::DATAIN ? 
+                    data1Len : L1Crypto::UpdateSize::DATAIN;
+                uint16_t chunkOutLen = 0;
+
+#ifdef DEBUG_LOG
+                printf("  -> chunkLen: %d\n", chunkLen);
+#endif // DEBUG_LOG
+
+                obj->L1CryptoUpdate(sessionId, flags, chunkLen, data1, 0, NULL,
+                    &chunkOutLen, dataOut);
+
+                data1 += chunkLen;
+                data1Len -= chunkLen;
+
+                if (dataOut != NULL) {
+                    dataOut += chunkLen;
+                }
+
+                if (dataOutLen != NULL) {
+                    *dataOutLen += chunkOutLen;
+                }
+            }
         }
         else
         {

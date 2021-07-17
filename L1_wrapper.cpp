@@ -14,6 +14,10 @@ L1_handle_t *L1_Create()
     printf("[DEBUG_LOG] L1_Create\n");
 #endif // DEBUG_LOG
 
+#ifdef INFO_LOG
+    printf("SEcube:INFO:Creating L1\n");
+#endif // INFO_LOG
+
     L1_handle_t *l1;
     L1 *obj;
 
@@ -29,6 +33,10 @@ void L1_Destroy(L1_handle_t *l1)
 #ifdef DEBUG_LOG
     printf("[DEBUG_LOG] L1_Destroy\n");
 #endif // DEBUG_LOG
+
+#ifdef INFO_LOG
+    printf("SEcube:INFO:Destroying L1\n");
+#endif // INFO_LOG
 
     delete (L1 *)l1->obj;
     free(l1);

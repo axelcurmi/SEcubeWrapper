@@ -16,7 +16,7 @@ g++ -O3 -g3 -fPIC -Wall -DDEBUG_LOG -c -o obj\L1.o SEcubeSources\L1\L1.cpp
 g++ -O0 -g3 -fPIC -Wall -DDEBUG_LOG -c -o obj\L0_wrapper.o L0_wrapper.cpp
 g++ -O0 -g3 -fPIC -Wall -DDEBUG_LOG -c -o obj\L1_wrapper.o L1_wrapper.cpp
 
-g++ -shared -fPIC -o lib/SEcubeWrapperDebug.dll ^
+g++ -shared -fPIC -o lib/SEcubeWrapper.dll ^
     obj\L0.o ^
     obj\L0_commodities.o ^
     obj\L0_communication.o ^

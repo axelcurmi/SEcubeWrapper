@@ -10,6 +10,11 @@ extern "C"
 {
 #endif
 
+#ifdef L1_METRICS
+struct L1_metrics;
+typedef struct L1_metrics L1_metrics_t;
+#endif // L1_METRICS
+
 struct L1_handle;
 typedef struct L1_handle L1_handle_t;
 
@@ -35,9 +40,6 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
 
 int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
     uint16_t *dataOutLen, uint8_t *dataOut);
-int8_t DigestHMACSHA256(L1_handle_t *l1, uint32_t keyId,
-    uint16_t dataInLen, uint8_t *dataIn, uint16_t *dataOutLen,
-    uint8_t *dataOut);
 
 #ifdef __cplusplus
 }

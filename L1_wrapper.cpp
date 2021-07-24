@@ -7,6 +7,12 @@
 #ifdef L1_METRICS
 struct L1_metrics
 {
+    int FindKeyCount;
+    double FindKeyTime;
+
+    int EditKeyCount;
+    double EditKeyTime;
+
     int CryptoInitCount;
     double CryptoInitTime;
 
@@ -51,17 +57,53 @@ void L1_Destroy(L1_handle_t *l1)
 {
 #ifdef INFO_LOG
     printf("SEcube:INFO:Destroying L1\n");
-#ifdef L1_METRICS
-    printf("SEcube:INFO:CryptoInitCount: %d\n", l1->metrics->CryptoInitCount);
-    printf("SEcube:INFO:CryptoInitTime: %f\n", l1->metrics->CryptoInitTime);
-    printf("SEcube:INFO:CryptoUpdateCount: %d\n", l1->metrics->CryptoUpdateCount);
-    printf("SEcube:INFO:CryptoUpdateTime: %f\n", l1->metrics->CryptoUpdateTime);
-#endif // L1_METRICS
 #endif // INFO_LOG
 
     delete (L1 *)l1->obj;
     free(l1);
 }
+
+#ifdef L1_METRICS
+// TODO [AC]: A structure would be better.
+// But I need to learn to use structures using Python "ctypes" first.
+void L1_GetMetrics(L1_handle_t *l1, uint32_t *findKeyCount, double *findKeyTime,
+    uint32_t *editKeyCount, double *editKeyTime,
+    uint32_t *cryptoInitCount, double *cryptoInitTime,
+    uint32_t *cryptoUpdateCount, double *cryptoUpdateTime)
+{
+    if (findKeyCount != NULL) {
+        *findKeyCount = l1->metrics->FindKeyCount;
+    }
+
+    if (findKeyTime != NULL) {
+        *findKeyTime = l1->metrics->FindKeyTime;
+    }
+
+    if (editKeyCount != NULL) {
+        *editKeyCount = l1->metrics->EditKeyCount;
+    }
+
+    if (editKeyTime != NULL) {
+        *editKeyTime = l1->metrics->EditKeyTime;
+    }
+
+    if (cryptoInitCount != NULL) {
+        *cryptoInitCount = l1->metrics->CryptoInitCount;
+    }
+
+    if (cryptoInitTime != NULL) {
+        *cryptoInitTime = l1->metrics->CryptoInitTime;
+    }
+
+    if (cryptoUpdateCount != NULL) {
+        *cryptoUpdateCount = l1->metrics->CryptoUpdateCount;
+    }
+
+    if (cryptoUpdateTime != NULL) {
+        *cryptoUpdateTime = l1->metrics->CryptoUpdateTime;
+    }
+}
+#endif // L1_METRICS
 
 int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
     uint8_t force)
@@ -95,7 +137,17 @@ int8_t L1_Logout(L1_handle_t *l1)
 int8_t L1_FindKey(L1_handle_t *l1, uint32_t keyID)
 {
     L1 *obj = (L1 *)l1->obj;
-    return obj->L1FindKey(keyID);
+#ifdef L1_METRICS
+    l1->metrics->FindKeyCount += 1;
+    clock_t start = clock();
+#endif // L1_METRICS
+    int8_t result = obj->L1FindKey(keyID);
+#ifdef L1_METRICS
+    clock_t end = clock();
+    l1->metrics->FindKeyTime += ((double) end - start) / CLOCKS_PER_SEC;
+#endif // L1_METRICS
+
+    return result;
 }
 
 int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
@@ -119,7 +171,15 @@ int8_t L1_KeyEdit(L1_handle_t *l1, uint32_t id, uint32_t validity,
 
     try
     {
+#ifdef L1_METRICS
+        l1->metrics->EditKeyCount += 1;
+        clock_t start = clock();
+#endif // L1_METRICS
         obj->L1KeyEdit(&key, op);
+#ifdef L1_METRICS
+        clock_t end = clock();
+        l1->metrics->EditKeyTime += ((double) end - start) / CLOCKS_PER_SEC;
+#endif // L1_METRICS
     }
     catch (...)
     {
@@ -200,12 +260,12 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
 
 #ifdef L1_METRICS
                 l1->metrics->CryptoUpdateCount += 1;
-                start = clock();
+                clock_t start = clock();
 #endif // L1_METRICS
                 obj->L1CryptoUpdate(sessionId, flags, chunkLen, data1, 0, NULL,
                     &chunkOutLen, dataOut);
 #ifdef L1_METRICS
-            end = clock();
+                clock_t end = clock();
             l1->metrics->CryptoUpdateTime += ((double) end - start) / CLOCKS_PER_SEC;
 #endif // L1_METRICS
 
@@ -230,12 +290,12 @@ int8_t CryptoUpdate(L1_handle_t *l1, uint32_t sessionId, uint16_t flags,
                 uint16_t chunkOutLen = 0;
 #ifdef L1_METRICS
                 l1->metrics->CryptoUpdateCount += 1;
-                start = clock();
+                clock_t start = clock();
 #endif // L1_METRICS
                 obj->L1CryptoUpdate(sessionId, flags, data1Len, data1, chunkLen,
                     data2, &chunkOutLen, dataOut);
 #ifdef L1_METRICS
-                end = clock();
+                clock_t end = clock();
                 l1->metrics->CryptoUpdateTime += ((double) end - start) / CLOCKS_PER_SEC;
 #endif // L1_METRICS
 
@@ -278,8 +338,16 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         {
             uint16_t chunkLen = dataInLen < L1Crypto::UpdateSize::DATAIN ? 
                 dataInLen : L1Crypto::UpdateSize::DATAIN;
+#ifdef L1_METRICS
+            l1->metrics->CryptoUpdateCount += 1;
+            start = clock();
+#endif // L1_METRICS
             obj->L1CryptoUpdate(sessionID, 0, chunkLen, dataIn, 0, NULL,
                 NULL, NULL);
+#ifdef L1_METRICS
+            end = clock();
+            l1->metrics->CryptoUpdateTime += ((double) end - start) / CLOCKS_PER_SEC;
+#endif // L1_METRICS
             
             dataIn += chunkLen;
             dataInLen -= chunkLen;
@@ -288,12 +356,12 @@ int8_t DigestSHA256(L1_handle_t *l1, uint16_t dataInLen, uint8_t *dataIn,
         // FINIT
 #ifdef L1_METRICS
             l1->metrics->CryptoUpdateCount += 1;
-            clock_t start = clock();
+            start = clock();
 #endif // L1_METRICS
         obj->L1CryptoUpdate(sessionID, L1Crypto::UpdateFlags::FINIT, 0, NULL,
             0, NULL, dataOutLen, dataOut);
 #ifdef L1_METRICS
-            clock_t end = clock();
+            end = clock();
             l1->metrics->CryptoUpdateTime += ((double) end - start) / CLOCKS_PER_SEC;
 #endif // L1_METRICS
     }

@@ -21,6 +21,13 @@ typedef struct L1_handle L1_handle_t;
 L1_handle_t *L1_Create();
 void L1_Destroy(L1_handle_t *l1);
 
+#ifdef L1_METRICS
+void L1_GetMetrics(L1_handle_t *l1, uint32_t *findKeyCount, double *findKeyTime,
+    uint32_t *editKeyCount, double *editKeyTime,
+    uint32_t *cryptoInitCount, double *cryptoInitTime,
+    uint32_t *cryptoUpdateCount, double *cryptoUpdateTime);
+#endif // L1_METRICS
+
 int8_t L1_Login(L1_handle_t *l1, const uint8_t *pin, uint16_t access,
     uint8_t force);
 int8_t L1_Logout(L1_handle_t *l1);
